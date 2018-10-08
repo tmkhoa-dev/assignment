@@ -1,0 +1,30 @@
+{
+    "name": "tmkhoa92/assignment",
+    "type": "other",
+    "description": "Assignment from Khoa Tran",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Khoa Tran",
+            "email": "tranminhkhoa1402@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "6.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tmkhoa\\Assignment\\": "src/",
+            "Tmkhoa\\Assignment\\Test\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    }
+}
+
