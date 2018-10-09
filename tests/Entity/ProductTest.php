@@ -20,7 +20,7 @@ class ProductTest extends TestCase
     public function testGetterAndSetter()
     {
         /** @var Product $product */
-        $product = (new Product())
+        $product = (Product::of())
             ->setId('product-id')
             ->setName('product-name')
             ->setPrice(Money::ofCurrencyAndAmount('USD', 999));

@@ -35,12 +35,12 @@ class CartManagerTest extends TestCase
             ->setId('product-2')
             ->setName('Orange')
             ->setPrice(Money::ofCurrencyAndAmount('USD', 399));
-        $lineItem2 = new LineItem($orange, 1);
 
         $cart = new Cart();
 
         $cart->setUser($user);
-        $cart->setLineItems([$lineItem1, $lineItem2]);
+        $cart->setLineItems([$lineItem1]);
+        CartManager::addProduct($cart, $orange, 1);
 
         self::assertEquals(3, CartManager::getTotalProducts($cart));
         self::assertTrue(CartManager::getTotalPrice($cart)->isEqual(
@@ -75,6 +75,64 @@ class CartManagerTest extends TestCase
 
         CartManager::changeLineItemQuantity($cart, $apple, 2);
 
+        self::assertTrue(CartManager::getTotalPrice($cart)->isEqual(
+            Money::ofCurrencyAndAmount('USD', 495 * 2)
+        ));
+    }
+
+    public function testAddProductWhenExistedAlready()
+    {
+        $user = (new User())
+            ->setId('user-id')
+            ->setName('John Doe')
+            ->setEmail('john.doe@example.com');
+
+        $apple = (new Product())
+            ->setId('product-1')
+            ->setName('Apple')
+            ->setPrice(Money::ofCurrencyAndAmount('USD', 495));
+        $lineItem1 = new LineItem($apple, 2);
+
+        $cart = new Cart();
+
+        $cart->setUser($user);
+        $cart->setLineItems([$lineItem1]);
+        CartManager::addProduct($cart, $apple, 1);
+
+        self::assertEquals(3, CartManager::getTotalProducts($cart));
+        self::assertEquals(1, count($cart->getLineItems()));
+        self::assertTrue(CartManager::getTotalPrice($cart)->isEqual(
+            Money::ofCurrencyAndAmount('USD', 495 * 3)
+        ));
+    }
+
+    public function testRemoveProduct()
+    {
+        $user = (new User())
+            ->setId('user-id')
+            ->setName('John Doe')
+            ->setEmail('john.doe@example.com');
+
+        $apple = (new Product())
+            ->setId('product-1')
+            ->setName('Apple')
+            ->setPrice(Money::ofCurrencyAndAmount('USD', 495));
+        $lineItem1 = new LineItem($apple, 2);
+
+        $orange = (new Product())
+            ->setId('product-2')
+            ->setName('Orange')
+            ->setPrice(Money::ofCurrencyAndAmount('USD', 399));
+
+        $cart = new Cart();
+        $cart->setUser($user);
+        $cart->setLineItems([$lineItem1]);
+        CartManager::addProduct($cart, $orange, 1);
+        CartManager::removeProduct($cart, $orange);
+
+        $user->setCart($cart);
+        self::assertEquals(2, CartManager::getTotalProducts($cart));
+        self::assertEquals(1, count($cart->getLineItems()));
         self::assertTrue(CartManager::getTotalPrice($cart)->isEqual(
             Money::ofCurrencyAndAmount('USD', 495 * 2)
         ));

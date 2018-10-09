@@ -16,6 +16,10 @@ class MoneyTest extends TestCase
         self::assertInstanceOf(Money::class, $money);
         self::assertEquals('USD', $money->getCurrencyCode());
         self::assertEquals(495, $money->getAmount());
+        $money->setCurrencyCode('VND');
+        $money->setAmount(499);
+        self::assertEquals('VND', $money->getCurrencyCode());
+        self::assertEquals(499, $money->getAmount());
     }
 
     public function testIsEqual()
